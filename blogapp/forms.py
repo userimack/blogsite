@@ -8,12 +8,12 @@ class RegisterForm(forms.ModelForm):
 		model = Register
 		fields = ['email','username','password']
 
-class ProfileForm(forms.Modelform):
+class ProfileForm(forms.ModelForm):
 	class Meta:
 		model = Profile
 		fields =['full_name','address','phone_number']
 
-class LoginForm(forms.ModelForm):
+class LoginForm(forms.Form):
 	username = forms.CharField(max_length=100)
 	password = forms.CharField(widget=forms.PasswordInput())
 
