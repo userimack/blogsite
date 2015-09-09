@@ -1,0 +1,11 @@
+{% extends "blogapp/base.html" %}
+
+{% block content %}
+
+{{ profile.full_name }}<br>
+{{ profile.address }}<br>
+{{ profile.phone_number }}<br>
+{{ profile.user.username }}<br>
+<a class="btn btn-default" href="/profile/"><span class="glyphicon glyphicon-pencil"></span></a>
+{% endblock %}
+
