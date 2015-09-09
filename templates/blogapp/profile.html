@@ -8,7 +8,7 @@
 		{{field.error}}
 	{% endfor %}
 
-	<form action="/profile/",method ="POST">
+	<form action="/profile/" method ="POST">
 	{% csrf_token %}
 
 	{{form.as_ul}}
