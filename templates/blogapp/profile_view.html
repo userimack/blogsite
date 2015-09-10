@@ -1,11 +1,17 @@
 {% extends "blogapp/base.html" %}
 
 {% block content %}
+<ul>
+	
+	<li>Full Name: {{ profile.full_name }}</li><br>
+	<li>Address: {{ profile.address }}</li><br>
+	<li>Phone No: {{ profile.phone_number }}</li><br>
+	<li>Username: {{ profile.user.username }}</li><br>
+	</li>
 
-{{ profile.full_name }}<br>
-{{ profile.address }}<br>
-{{ profile.phone_number }}<br>
-{{ profile.user.username }}<br>
+
 <a class="btn btn-default" href="/profile/"><span class="glyphicon glyphicon-pencil"></span></a>
+
+</ul>
 {% endblock %}
 

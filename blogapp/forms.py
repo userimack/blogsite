@@ -18,9 +18,8 @@ class LoginForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput())
 
 class PostForm(forms.ModelForm):
+	#text = forms.CharField(widget=forms.TextArea, label='Entry')
 	class Meta:
 		model = Post
 		fields = ['title','text']
 		
-
-

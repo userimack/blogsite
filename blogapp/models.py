@@ -20,6 +20,7 @@ class Profile(models.Model):
 		return self.full_name
 
 class Post(models.Model):
+	#author = models.ForeignKey(user,unique=True)
 	author = models.ForeignKey('auth.User')
 	title = models.CharField(max_length=50)
 	text = models.TextField()
