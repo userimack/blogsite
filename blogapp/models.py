@@ -21,7 +21,7 @@ class Profile(models.Model):
 
 class Post(models.Model):
 	#author = models.ForeignKey(user,unique=True)
-	author = models.ForeignKey('auth.User')
+	author = models.ForeignKey(Register)
 	title = models.CharField(max_length=50)
 	text = models.TextField()
 	created_date = models.DateTimeField(default=timezone.now)

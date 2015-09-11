@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse,HttpResponseRedirect
 
 from blogapp.models import Register,Profile,Post
 from blogapp.forms import RegisterForm,ProfileForm,PostForm,LoginForm
+from django.utils import timezone
 
 # Create your views here.
 
@@ -118,5 +119,53 @@ def profile_view(request):
             b=Profile.objects.get(user=a)
 
         return render(request,'blogapp/profile_view.html',{'profile':b})
+    else:
+        return HttpResponseRedirect('/login/')
+
+def post_list(request):
+    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    return render(request,'blogapp/post_list.html',{'posts':posts})
+
+def post_detail(request,pk):
+    post = get_object_or_404(Post,pk=pk)
+    return render(request,'blogapp/post_detail.html',{'post':post})
+
+def post_new(request):
+    if request.session['username']:
+        if request.method=="POST":
+            form = PostForm(request.POST)
+
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.author= Register.objects.get(username=request.session['username'])
+                post.published_date = timezone.now()
+                post.save()
+                return redirect('blogapp.views.post_detail',pk=post.pk)
+        else:
+            form = PostForm()
+
+    else:
+        return HttpResponseRedirect('/login/')
+
+    return render(request,'blogapp/post_edit.html',{'form':form})
+
+def post_edit(request,pk):
+    if request.session['username']:
+        post = get_object_or_404(Post,pk=pk)
+
+        if request.method =="POST":
+            form = PostForm(request.POST,instance=post)
+
+            if form.is_valid():
+                post = form.save(commit = False)
+                                #add Post author
+                post.published_date(timezone.now())
+                post.save()
+
+                return redirect('blogapp.views.post_detail',pk=post.pk)
+        else:
+            form = PostForm(instance=post)
+
+        return render(request,'blogapp/post_edit.html',{'form':form})
     else:
         return HttpResponseRedirect('/login/')
