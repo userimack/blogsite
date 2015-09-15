@@ -8,14 +8,19 @@ from django.utils import timezone
 # Create your views here.
 
 def home(request):
+    try:
+        if request.session['username']:
+            return HttpResponseRedirect('/success/')
+    except:
+        pass
     return render(request,'blogapp/base.html',{})
 
-def register(request):
+def register(request):  
     #A Http Post
     if request.method =='POST' :
         form = RegisterForm(request.POST)
 
-        #Checking the vlaidity of the form
+        #Checking the validity of the form
         if form.is_valid():
             #then Save the form
             form.save()
@@ -150,8 +155,9 @@ def post_new(request):
     return render(request,'blogapp/post_edit.html',{'form':form})
 
 def post_edit(request,pk):
-    if request.session['username']:
-        post = get_object_or_404(Post,pk=pk)
+    post = get_object_or_404(Post,pk=pk)
+    if request.session['username']==post.author:
+        
 
         if request.method =="POST":
             form = PostForm(request.POST,instance=post)
