@@ -15,27 +15,39 @@ def home(request):
         pass
     return render(request,'blogapp/base.html',{})
 
+def error(request):
+    return render(request,'blogapp/error.html',{})
+
 def register(request):  
-    #A Http Post
-    if request.method =='POST' :
-        form = RegisterForm(request.POST)
+    try :
+        if request.session['username'] :
+            return HttpResponseRedirect('/success/')
+    except:
+        pass
 
-        #Checking the validity of the form
-        if form.is_valid():
-            #then Save the form
-            form.save()
-            #Now send the user to home page
-            return HttpResponseRedirect('/login/')
+        #A Http Post
+        if request.method =='POST' :
+            form = RegisterForm(request.POST)
+
+            #Checking the validity of the form
+            if form.is_valid():
+                #then Save the form
+                form.save()
+                #Now send the user to home page
+                return HttpResponseRedirect('/login/')
+            else:
+                #the form contains error return  the error
+                print (form.errors)
+
         else:
-            #the form contains error return  the error
-            print (form.errors)
+            #If the request was not a POST method then show the form to enter the details
+            form = RegisterForm()
 
-    else:
-        #If the request was not a POST method then show the form to enter the details
-        form = RegisterForm()
+            #Render the form with error if supplied
+        return render(request,'blogapp/register.html',{'form':form})
+    
 
-        #Render the form with error if supplied
-    return render(request,'blogapp/register.html',{'form':form})
+
 
 def login(request):
     try:
@@ -136,42 +148,51 @@ def post_detail(request,pk):
     return render(request,'blogapp/post_detail.html',{'post':post})
 
 def post_new(request):
-    if request.session['username']:
-        if request.method=="POST":
-            form = PostForm(request.POST)
+    try:
+        if request.session['username']:
 
-            if form.is_valid():
-                post = form.save(commit=False)
-                post.author= Register.objects.get(username=request.session['username'])
-                post.published_date = timezone.now()
-                post.save()
-                return redirect('blogapp.views.post_detail',pk=post.pk)
-        else:
-            form = PostForm()
+            if request.method=="POST":
+                form = PostForm(request.POST)
 
-    else:
+                if form.is_valid():
+                    post = form.save(commit=False)
+                    post.author= Register.objects.get(username=request.session['username'])
+                    post.published_date = timezone.now()
+                    post.save()
+                    return redirect('blogapp.views.post_detail',pk=post.pk)
+            else:
+                form = PostForm()
+
+            return render(request,'blogapp/post_edit.html',{'form':form})
+
+        
+    except:
         return HttpResponseRedirect('/login/')
-
-    return render(request,'blogapp/post_edit.html',{'form':form})
-
-def post_edit(request,pk):
-    post = get_object_or_404(Post,pk=pk)
-    if request.session['username']==post.author:
         
 
-        if request.method =="POST":
-            form = PostForm(request.POST,instance=post)
+def post_edit(request,pk):
+    try:
+        if request.session['username']:
 
-            if form.is_valid():
-                post = form.save(commit = False)
-                                #add Post author
-                post.published_date(timezone.now())
-                post.save()
+            post = get_object_or_404(Post,pk=pk)
+            username= Register.objects.get(username=request.session['username'])
+            if username==post.author:        
 
-                return redirect('blogapp.views.post_detail',pk=post.pk)
-        else:
-            form = PostForm(instance=post)
+                if request.method =="POST":
+                    form = PostForm(request.POST,instance=post)
 
-        return render(request,'blogapp/post_edit.html',{'form':form})
-    else:
+                    if form.is_valid():
+                        post = form.save(commit = False)
+                                        #add Post author
+                        post.published_date(timezone.now())
+                        post.save()
+
+                        return redirect('blogapp.views.post_detail',pk=post.pk)
+                else:
+                    form = PostForm(instance=post)
+
+                return render(request,'blogapp/post_edit.html',{'form':form})
+            else:
+                return HttpResponseRedirect('/error/')
+    except:
         return HttpResponseRedirect('/login/')

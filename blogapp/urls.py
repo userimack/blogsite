@@ -3,6 +3,7 @@ from blogapp import views
 
 urlpatterns = [
 	url(r'^$',views.home,name='home'),
+	url(r'^error/$',views.error,name='error'),
 	url(r'^register/$',views.register,name='register'),
 	url(r'^login/$',views.login,name='login'),
 	url(r'^success/$',views.success,name='success'),

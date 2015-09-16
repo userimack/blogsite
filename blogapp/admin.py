@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blogapp.models import Register
+from blogapp.models import Register,Post
 
 # Register your models here.
 class NewUsers(admin.ModelAdmin):
@@ -9,3 +9,4 @@ class NewUsers(admin.ModelAdmin):
 		model = Register
 
 admin.site.register(Register,NewUsers)
+admin.site.register(Post)

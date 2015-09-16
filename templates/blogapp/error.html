@@ -1,7 +1,10 @@
-{% extends "html" %}
+{% extends "blogapp/base.html" %}
 
 {% block content %}
-	<h1>Error: Authorization Failed</h1>
-	<h2>Login Credentials doesn't matched. Try again</h2>
+
+	<a href="#" class="btn btn-warning"><em><h3>Error :( </h3></em></a>
+	<br>
+	 <h2>You are not the Author of the post</h2>
+	<h3>You are not allowed to edit It.</h3>
 
 {% endblock %}
