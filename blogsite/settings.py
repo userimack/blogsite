@@ -26,7 +26,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))  #Project root for sto
 SECRET_KEY = '%4ebh65@^#u8^^uo4ex-tzjt-(^g&#ow6i$+gsjmq42lkqy#sq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
