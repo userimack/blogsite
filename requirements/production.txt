@@ -1,4 +1,3 @@
--r base.txt
 
 # for deployement 
 dj-database-url==0.4.0
